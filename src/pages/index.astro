@@ -1,17 +1,50 @@
 ---
 import Layout from "@/layouts/main.astro"
-import { Button } from "@/components/ui/button"
+import { getPageContent } from "@/lib/cms"
+import Footer from "@/components/link-hub/Footer.astro"
+import ProfileHeader from "@/components/link-hub/ProfileHeader.astro"
+import Section from "@/components/link-hub/Section.astro"
+
+const content = await getPageContent()
+const { profile } = content
 ---
 
-<Layout>
-  <div class="flex min-h-svh p-6">
-    <div class="flex max-w-md min-w-0 flex-col gap-4 text-sm leading-loose">
-      <div>
-        <h1 class="font-medium">Project ready!</h1>
-        <p>You may now add components and start building.</p>
-        <p>We've already added the button component for you.</p>
-        <Button client:load className="mt-2">Button</Button>
-      </div>
+<Layout
+  title={profile.meta_title ?? profile.name}
+  description={profile.meta_description}
+  ogImage={profile.og_image_path}
+>
+  <main
+    class="mx-auto flex min-h-svh w-full max-w-2xl flex-col px-5 py-12 sm:px-8 sm:py-16"
+  >
+    <ProfileHeader profile={profile} />
+    <div class="mt-12 flex flex-col gap-10">
+      {
+        content.sections.map((section) => (
+          <Section section={section} profile={profile} />
+        ))
+      }
     </div>
-  </div>
+    <div class="mt-auto pt-14"><Footer text={profile.footer_text} /></div>
+  </main>
+  <script>
+    const params = new URLSearchParams(window.location.search)
+    const payload = {
+      pathname: window.location.pathname,
+      referrer: document.referrer,
+      utm_source: params.get("utm_source"),
+      utm_medium: params.get("utm_medium"),
+      utm_campaign: params.get("utm_campaign"),
+      utm_content: params.get("utm_content"),
+      utm_term: params.get("utm_term"),
+    }
+
+    fetch("/api/analytics/page-view", {
+      method: "POST",
+      credentials: "same-origin",
+      keepalive: true,
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify(payload),
+    }).catch(() => undefined)
+  </script>
 </Layout>

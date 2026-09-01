@@ -1,0 +1,53 @@
+---
+import type { SiteProfile } from "@/lib/cms"
+
+const { profile } = Astro.props as { profile: SiteProfile }
+const initials = profile.name
+  .split(/\s+/)
+  .map((part) => part[0])
+  .join("")
+  .slice(0, 2)
+---
+
+<header class="flex flex-col items-center text-center">
+  {
+    profile.avatar_path ? (
+      <img
+        src={profile.avatar_path}
+        width="112"
+        height="112"
+        alt={`${profile.name} profile photo`}
+        class="size-28 rounded-full border-4 border-background object-cover shadow-lg"
+      />
+    ) : (
+      <div
+        class="flex size-28 items-center justify-center rounded-full bg-primary text-3xl font-semibold text-primary-foreground shadow-lg"
+        aria-hidden="true"
+      >
+        {initials}
+      </div>
+    )
+  }
+  <h1 class="mt-5 text-3xl font-semibold tracking-tight">{profile.name}</h1>
+  {
+    profile.position && (
+      <p class="mt-1 text-base text-muted-foreground">{profile.position}</p>
+    )
+  }
+  {
+    profile.description && (
+      <p class="mt-4 max-w-lg leading-7 text-pretty text-foreground/80">
+        {profile.description}
+      </p>
+    )
+  }
+  {
+    (profile.location || profile.availability_text) && (
+      <p class="mt-3 text-sm text-muted-foreground">
+        {[profile.location, profile.availability_text]
+          .filter(Boolean)
+          .join(" · ")}
+      </p>
+    )
+  }
+</header>

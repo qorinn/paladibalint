@@ -1,0 +1,39 @@
+---
+import type { PageProject, SiteProfile } from "@/lib/cms"
+import ExpandableDescription from "./ExpandableDescription.astro"
+import LinkButton from "./LinkButton.astro"
+
+const { project, profile } = Astro.props as {
+  project: PageProject
+  profile: SiteProfile
+}
+---
+
+<article class="rounded-2xl border border-border bg-card p-5 shadow-sm">
+  <h3 class="text-lg font-semibold tracking-tight">{project.title}</h3>
+  {
+    project.short_description && (
+      <p class="mt-1.5 leading-6 text-muted-foreground">
+        {project.short_description}
+      </p>
+    )
+  }
+  {
+    project.expanded_description && (
+      <ExpandableDescription
+        description={project.expanded_description}
+        expandLabel={profile.expand_label ?? "More"}
+        collapseLabel={profile.collapse_label ?? "Less"}
+      />
+    )
+  }
+  {
+    project.links.length > 0 && (
+      <div class="mt-4 flex flex-col gap-2">
+        {project.links.map((link) => (
+          <LinkButton link={link} compact />
+        ))}
+      </div>
+    )
+  }
+</article>

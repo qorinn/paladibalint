@@ -1,0 +1,32 @@
+---
+import { HugeiconsIcon } from "@hugeicons/react"
+import {
+  ExternalLinkIcon,
+  FileTextIcon,
+  GithubIcon,
+  GlobeIcon,
+  InstagramIcon,
+  Linkedin01Icon,
+  Mail01Icon,
+  YoutubeIcon,
+} from "@hugeicons/core-free-icons"
+
+const { name } = Astro.props
+const icons = {
+  github: GithubIcon,
+  linkedin: Linkedin01Icon,
+  instagram: InstagramIcon,
+  mail: Mail01Icon,
+  "file-text": FileTextIcon,
+  globe: GlobeIcon,
+  "external-link": ExternalLinkIcon,
+  youtube: YoutubeIcon,
+}
+const icon = icons[name as keyof typeof icons]
+---
+
+{
+  icon && (
+    <HugeiconsIcon icon={icon} aria-hidden="true" className="size-5 shrink-0" />
+  )
+}

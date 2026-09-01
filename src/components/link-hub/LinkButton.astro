@@ -1,0 +1,46 @@
+---
+import type { Link } from "@/lib/cms"
+import Icon from "./Icon.astro"
+
+const { link, compact = false } = Astro.props as {
+  link: Link
+  compact?: boolean
+}
+const href =
+  link.trackable && link.redirect_slug
+    ? `/go/${encodeURIComponent(link.redirect_slug)}`
+    : link.target_url
+const target = link.open_in_new_tab ? "_blank" : undefined
+const rel = link.open_in_new_tab ? "noreferrer" : undefined
+const styles = {
+  default: "border-border bg-card hover:border-foreground/20 hover:bg-muted",
+  primary:
+    "border-primary bg-primary text-primary-foreground hover:bg-primary/90",
+  subtle: "border-transparent bg-muted/70 hover:bg-muted",
+}
+const tone = styles[link.style ?? "default"]
+---
+
+<a
+  href={href}
+  target={target}
+  rel={rel}
+  class:list={[
+    "group flex w-full items-center rounded-2xl border text-left transition outline-none focus-visible:ring-3 focus-visible:ring-ring/30",
+    compact ? "gap-2 px-3 py-2 text-sm font-medium" : "gap-3 px-4 py-3.5",
+    tone,
+  ]}
+>
+  <Icon name={link.icon} />
+  <span class="min-w-0 flex-1">
+    <span class="block font-medium">{link.label}</span>
+    {
+      link.description && (
+        <span class="mt-0.5 block text-sm text-muted-foreground">
+          {link.description}
+        </span>
+      )
+    }
+  </span>
+  {link.open_in_new_tab && <Icon name="external-link" />}
+</a>

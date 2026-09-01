@@ -1,5 +1,13 @@
 ---
 import "@/styles/global.css"
+
+interface Props {
+  title: string
+  description?: string | null
+  ogImage?: string | null
+}
+
+const { title, description, ogImage } = Astro.props
 ---
 
 <html lang="en">
@@ -7,7 +15,18 @@ import "@/styles/global.css"
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <title>Astro App</title>
+    <title>{title}</title>
+    {description && <meta name="description" content={description} />}
+    <meta property="og:title" content={title} />
+    {description && <meta property="og:description" content={description} />}
+    {
+      ogImage && (
+        <meta
+          property="og:image"
+          content={new URL(ogImage, Astro.url).toString()}
+        />
+      )
+    }
   </head>
   <body>
     <slot />

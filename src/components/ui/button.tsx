@@ -53,4 +53,6 @@ function Button({
   )
 }
 
+// This module intentionally exports the variant helper for non-React consumers.
+// eslint-disable-next-line react-refresh/only-export-components
 export { Button, buttonVariants }

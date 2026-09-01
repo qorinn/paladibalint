@@ -1,0 +1,48 @@
+---
+import type { PageSection, SiteProfile } from "@/lib/cms"
+import LinkButton from "./LinkButton.astro"
+import ProjectItem from "./ProjectItem.astro"
+
+const { section, profile } = Astro.props as {
+  section: PageSection
+  profile: SiteProfile
+}
+const hasContent = section.links.length > 0 || section.projects.length > 0
+---
+
+{
+  hasContent && (
+    <section
+      aria-labelledby={`section-${section.id}`}
+      class="flex flex-col gap-4"
+    >
+      {section.title && (
+        <h2
+          id={`section-${section.id}`}
+          class="text-sm font-semibold tracking-wide text-muted-foreground uppercase"
+        >
+          {section.title}
+        </h2>
+      )}
+      {section.description && (
+        <p class="-mt-2 text-sm leading-6 text-muted-foreground">
+          {section.description}
+        </p>
+      )}
+      {section.links.length > 0 && (
+        <div class="flex flex-col gap-3">
+          {section.links.map((link) => (
+            <LinkButton link={link} />
+          ))}
+        </div>
+      )}
+      {section.projects.length > 0 && (
+        <div class="flex flex-col gap-3">
+          {section.projects.map((project) => (
+            <ProjectItem project={project} profile={profile} />
+          ))}
+        </div>
+      )}
+    </section>
+  )
+}
