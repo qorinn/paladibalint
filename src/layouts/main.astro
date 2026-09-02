@@ -19,14 +19,13 @@ const { title, description, ogImage } = Astro.props
     {description && <meta name="description" content={description} />}
     <meta property="og:title" content={title} />
     {description && <meta property="og:description" content={description} />}
-    {
-      ogImage && (
-        <meta
-          property="og:image"
-          content={new URL(ogImage, Astro.url).toString()}
-        />
-      )
-    }
+    <meta
+      property="og:image"
+      content={new URL(
+        ogImage ?? "/images/link-hub-og.png",
+        Astro.url
+      ).toString()}
+    />
   </head>
   <body>
     <slot />
