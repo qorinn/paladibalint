@@ -1,0 +1,21 @@
+<svg width="1800" height="1200" viewBox="0 0 1800 1200" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <filter id="soft-blur" x="-40%" y="-40%" width="180%" height="180%" color-interpolation-filters="sRGB">
+      <feGaussianBlur stdDeviation="82" />
+    </filter>
+    <filter id="noise" x="0" y="0" width="100%" height="100%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.82" numOctaves="4" stitchTiles="stitch" />
+      <feColorMatrix type="saturate" values="0" />
+      <feComponentTransfer>
+        <feFuncA type="table" tableValues="0 0.1" />
+      </feComponentTransfer>
+    </filter>
+  </defs>
+  <g filter="url(#soft-blur)">
+    <path d="M-178 104C-114 -64 198 -111 353 18C479 123 386 370 206 399C12 431 -240 269 -178 104Z" fill="#DDEEFF" />
+    <path d="M1251 -146C1422 -243 1748 -121 1810 92C1866 286 1642 431 1467 341C1280 244 1089 -55 1251 -146Z" fill="#F4E7FF" />
+    <path d="M1407 779C1586 644 1853 776 1829 990C1806 1193 1493 1281 1320 1133C1169 1003 1241 904 1407 779Z" fill="#DFF7EC" />
+    <path d="M238 835C337 691 605 699 692 867C781 1039 604 1198 402 1145C207 1094 135 986 238 835Z" fill="#FFF0DC" />
+  </g>
+  <rect width="1800" height="1200" filter="url(#noise)" opacity="0.42" />
+</svg>

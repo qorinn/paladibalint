@@ -123,6 +123,11 @@
   }
   body {
     @apply bg-background text-foreground antialiased;
+    background-image: url("/images/link-hub-atmosphere.svg");
+    background-position: center top;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-attachment: fixed;
   }
   button:not(:disabled),
   [role="button"]:not(:disabled) {
