@@ -2,6 +2,7 @@
 import type { PageSection, SiteProfile } from "@/lib/cms"
 import LinkButton from "./LinkButton.astro"
 import ProjectItem from "./ProjectItem.astro"
+import SocialLinks from "./SocialLinks.astro"
 
 const { section, profile } = Astro.props as {
   section: PageSection
@@ -19,7 +20,7 @@ const hasContent = section.links.length > 0 || section.projects.length > 0
       {section.title && (
         <h2
           id={`section-${section.id}`}
-          class="text-sm font-semibold tracking-wide text-muted-foreground uppercase"
+          class="text-lg font-semibold tracking-tight text-primary"
         >
           {section.title}
         </h2>
@@ -29,13 +30,15 @@ const hasContent = section.links.length > 0 || section.projects.length > 0
           {section.description}
         </p>
       )}
-      {section.links.length > 0 && (
+      {section.section_type === "social_links" && section.links.length > 0 ? (
+        <SocialLinks links={section.links} />
+      ) : section.links.length > 0 ? (
         <div class="flex flex-col gap-3">
           {section.links.map((link) => (
             <LinkButton link={link} />
           ))}
         </div>
-      )}
+      ) : null}
       {section.projects.length > 0 && (
         <div class="flex flex-col gap-3">
           {section.projects.map((project) => (

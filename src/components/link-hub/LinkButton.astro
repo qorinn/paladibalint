@@ -13,10 +13,12 @@ const href =
 const target = link.open_in_new_tab ? "_blank" : undefined
 const rel = link.open_in_new_tab ? "noreferrer" : undefined
 const styles = {
-  default: "border-border bg-card hover:border-foreground/20 hover:bg-muted",
+  default:
+    "border-primary/80 bg-card/85 text-primary shadow-[0_3px_16px_oklch(0.51_0.18_275_/_6%)] hover:bg-primary/[.06] hover:border-primary",
   primary:
-    "border-primary bg-primary text-primary-foreground hover:bg-primary/90",
-  subtle: "border-transparent bg-muted/70 hover:bg-muted",
+    "border-primary bg-primary/[.06] text-primary shadow-[0_4px_18px_oklch(0.51_0.18_275_/_9%)] hover:bg-primary/[.12]",
+  subtle:
+    "border-primary/20 bg-transparent text-primary hover:border-primary/35",
 }
 const tone = styles[link.style ?? "default"]
 ---
@@ -26,9 +28,10 @@ const tone = styles[link.style ?? "default"]
   target={target}
   rel={rel}
   class:list={[
-    "group flex w-full items-center rounded-2xl border text-left transition outline-none focus-visible:ring-3 focus-visible:ring-ring/30",
+    "group flex w-full items-center rounded-full border text-left transition outline-none focus-visible:ring-3 focus-visible:ring-ring/30 active:translate-y-px",
     compact ? "gap-2 px-3 py-2 text-sm font-medium" : "gap-3 px-4 py-3.5",
     tone,
+    { "backdrop-blur-sm": link.style !== "subtle" },
   ]}
 >
   <Icon name={link.icon} />

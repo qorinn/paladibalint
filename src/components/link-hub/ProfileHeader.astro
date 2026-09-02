@@ -17,18 +17,20 @@ const initials = profile.name
         width="112"
         height="112"
         alt={`${profile.name} profile photo`}
-        class="size-28 rounded-full border-4 border-background object-cover shadow-lg"
+        class="size-28 rounded-full border-4 border-primary/80 object-cover shadow-[0_6px_22px_oklch(0.51_0.18_275_/_12%)]"
       />
     ) : (
       <div
-        class="flex size-28 items-center justify-center rounded-full bg-primary text-3xl font-semibold text-primary-foreground shadow-lg"
+        class="flex size-28 items-center justify-center rounded-full border-4 border-primary bg-card text-3xl font-semibold text-primary shadow-[0_6px_22px_oklch(0.51_0.18_275_/_12%)]"
         aria-hidden="true"
       >
         {initials}
       </div>
     )
   }
-  <h1 class="mt-5 text-3xl font-semibold tracking-tight">{profile.name}</h1>
+  <h1 class="mt-5 text-3xl font-semibold tracking-tight text-primary">
+    {profile.name}
+  </h1>
   {
     profile.position && (
       <p class="mt-1 text-base text-muted-foreground">{profile.position}</p>

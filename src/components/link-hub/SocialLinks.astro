@@ -1,0 +1,32 @@
+---
+import type { Link } from "@/lib/cms"
+import Icon from "./Icon.astro"
+
+const { links } = Astro.props as { links: Link[] }
+---
+
+<nav aria-label="Social links" class="flex flex-wrap justify-center gap-7">
+  {
+    links.map((link) => {
+      const href =
+        link.trackable && link.redirect_slug
+          ? `/go/${encodeURIComponent(link.redirect_slug)}`
+          : link.target_url
+      const target = link.open_in_new_tab ? "_blank" : undefined
+      const rel = link.open_in_new_tab ? "noreferrer" : undefined
+
+      return (
+        <a
+          href={href}
+          target={target}
+          rel={rel}
+          aria-label={link.label}
+          class="text-primary transition hover:text-primary/70 focus-visible:ring-3 focus-visible:ring-ring/30 focus-visible:outline-none active:translate-y-px"
+        >
+          <Icon name={link.icon} className="size-8" />
+          <span class="sr-only">{link.label}</span>
+        </a>
+      )
+    })
+  }
+</nav>

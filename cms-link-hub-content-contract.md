@@ -70,15 +70,15 @@ Ajánlott jelentés: `primary_links` a fő CTA-khoz, `social_links` a közössé
 
 A projekt nem kap önálló route-ot vagy detail oldalt; csak szekción belüli elem.
 
-| Mező                   | Kötelező | Jelentés                                            |
-| ---------------------- | -------- | --------------------------------------------------- |
-| `id`                   | igen     | Stabil azonosító                                    |
-| `title`                | igen     | Projekt neve                                        |
-| `slug`                 | igen     | Stabil, ajánlottan egyedi CMS-kulcs; nem route      |
-| `short_description`    | nem      | Mindig látható rövid leírás                         |
-| `expanded_description` | nem      | Natív kibontóval megjelenő extra leírás             |
-| `image_path`           | nem      | Jövőbeli lokális képhely; jelenleg nem renderelődik |
-| `status`               | igen     | Csak `published` projekt jelenik meg                |
+| Mező                   | Kötelező | Jelentés                                                            |
+| ---------------------- | -------- | ------------------------------------------------------------------- |
+| `id`                   | igen     | Stabil azonosító                                                    |
+| `title`                | igen     | Projekt neve                                                        |
+| `slug`                 | igen     | Stabil, ajánlottan egyedi CMS-kulcs; nem route                      |
+| `short_description`    | nem      | Mindig látható rövid leírás                                         |
+| `expanded_description` | nem      | Natív kibontóval megjelenő extra leírás                             |
+| `image_path`           | nem      | Külső HTTPS logó- vagy kép URL; 64 × 64 projektképként renderelődik |
+| `status`               | igen     | Csak `published` projekt jelenik meg                                |
 
 Az `expanded_description` csak nem üres értéknél látszik. A feliratok a profil `expand_label` és `collapse_label` mezőjéből jönnek, fallbackként `More` / `Less` értékkel.
 
@@ -125,6 +125,8 @@ Egy linknek pontosan egy szülője legyen. Javasolt constraint: `CHECK ((section
 | `subtle`              | Visszafogott, halvány háttér      |
 
 Ne tároljon a CMS Tailwind classokat, inline CSS-t vagy HTML-t. A jelenleg leképezett ikonazonosítók: `github`, `linkedin`, `instagram`, `mail`, `file-text`, `globe`, `external-link`, `youtube`. Ismeretlen érték ikon nélkül, hiba nélkül jelenik meg; a CMS inkább a fenti fix választékot kínálja. Az `x` például jelenleg fallbackként ikon nélkül renderelődik.
+
+Projektkártyánál az `image_path` teljes külső HTTPS URL is lehet, például `https://lotuszmasszazs.hu/images/lotus-logo.webp`. A kép 64 × 64 pixeles, lekerekített logóként jelenik meg a projekt neve és leírása mellett.
 
 ### Trackelt linkek
 
@@ -190,6 +192,7 @@ A build jelenleg `select=*` lekérést használ. A publikus tartalomtáblákba n
 - A `section_projects` mindkét oldala létezik.
 - Minden linknek pontosan egy szülője van.
 - Publikált linkhez tartozik `label`, `target_url` és `sort_order`.
+- Projekt opcionális `image_path` értéke érvényes HTTPS kép- vagy logó URL.
 - Trackelt linkhez érvényes, egyedi `redirect_slug` tartozik.
 - Az ikon és stílus csak engedélyezett érték.
 - Publikálás után a Netlify build hook meghívódik.

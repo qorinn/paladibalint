@@ -9,15 +9,37 @@ const { project, profile } = Astro.props as {
 }
 ---
 
-<article class="rounded-2xl border border-border bg-card p-5 shadow-sm">
-  <h3 class="text-lg font-semibold tracking-tight">{project.title}</h3>
-  {
-    project.short_description && (
-      <p class="mt-1.5 leading-6 text-muted-foreground">
-        {project.short_description}
-      </p>
-    )
-  }
+<article
+  class="rounded-3xl border border-primary/35 bg-card/80 p-5 shadow-[0_4px_20px_oklch(0.51_0.18_275_/_5%)] backdrop-blur-sm"
+>
+  <div class="flex items-start gap-4">
+    {
+      project.image_path && (
+        <img
+          src={project.image_path}
+          width="128"
+          height="128"
+          alt={`${project.title} logo`}
+          loading="lazy"
+          decoding="async"
+          referrerpolicy="no-referrer"
+          class="h-16 aspect-video shrink-0 object-contain"
+        />
+      )
+    }
+    <div class="min-w-0 pt-1">
+      <h3 class="text-lg font-semibold tracking-tight text-primary">
+        {project.title}
+      </h3>
+      {
+        project.short_description && (
+          <p class="mt-1.5 leading-6 text-muted-foreground">
+            {project.short_description}
+          </p>
+        )
+      }
+    </div>
+  </div>
   {
     project.expanded_description && (
       <ExpandableDescription

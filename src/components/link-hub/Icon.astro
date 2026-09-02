@@ -11,7 +11,10 @@ import {
   YoutubeIcon,
 } from "@hugeicons/core-free-icons"
 
-const { name } = Astro.props
+const { name, className } = Astro.props as {
+  name: string | null
+  className?: string
+}
 const icons = {
   github: GithubIcon,
   linkedin: Linkedin01Icon,
@@ -27,6 +30,10 @@ const icon = icons[name as keyof typeof icons]
 
 {
   icon && (
-    <HugeiconsIcon icon={icon} aria-hidden="true" className="size-5 shrink-0" />
+    <HugeiconsIcon
+      icon={icon}
+      aria-hidden="true"
+      className={className ?? "size-5 shrink-0"}
+    />
   )
 }
