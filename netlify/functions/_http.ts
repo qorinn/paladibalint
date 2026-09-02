@@ -1,5 +1,6 @@
 export interface FunctionContext {
   params: Record<string, string | undefined>
+  waitUntil(promise: Promise<unknown>): void
 }
 
 const sessionCookieName = "lh_sid"

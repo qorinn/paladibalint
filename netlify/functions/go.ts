@@ -1,52 +1,15 @@
 import { recordAnalyticsEvent } from "../../src/lib/server/analytics"
-import { runtimeSelect } from "../../src/lib/server/supabase"
+import { runtimeRpc } from "../../src/lib/server/supabase"
 import { getSession, withSession, type FunctionContext } from "./_http"
 
 export const config = { path: "/go/:slug" }
 
-type RuntimeLink = {
-  id: string
-  section_id: string | null
-  project_id: string | null
+type ResolvedRedirect = {
+  link_id: string
   target_url: string
 }
 
-type PublishedRecord = { id: string; status: string }
-type SectionProject = { section_id: string; project_id: string }
-
-async function isPublishedParent(link: RuntimeLink) {
-  if (link.section_id) {
-    const sections = await runtimeSelect<PublishedRecord>("sections", {
-      id: `eq.${link.section_id}`,
-      status: "eq.published",
-      limit: "1",
-    })
-    return sections.length === 1
-  }
-  if (!link.project_id) return false
-
-  const projects = await runtimeSelect<PublishedRecord>("projects", {
-    id: `eq.${link.project_id}`,
-    status: "eq.published",
-    limit: "1",
-  })
-  if (projects.length !== 1) return false
-
-  const memberships = await runtimeSelect<SectionProject>("section_projects", {
-    project_id: `eq.${link.project_id}`,
-  })
-  for (const membership of memberships) {
-    const sections = await runtimeSelect<PublishedRecord>("sections", {
-      id: `eq.${membership.section_id}`,
-      status: "eq.published",
-      limit: "1",
-    })
-    if (sections.length === 1) return true
-  }
-  return false
-}
-
-function isSafeRedirectTarget(target: string) {
+export function isSafeRedirectTarget(target: string) {
   try {
     const url = new URL(target)
     return (
@@ -67,20 +30,14 @@ export default async function redirect(
   if (!slug || !/^[a-zA-Z0-9_-]+$/.test(slug))
     return new Response("Not Found", { status: 404 })
 
-  let link: RuntimeLink | undefined
+  let redirectTarget: ResolvedRedirect | undefined
   try {
-    link = (
-      await runtimeSelect<RuntimeLink>("links", {
-        redirect_slug: `eq.${slug}`,
-        status: "eq.published",
-        limit: "1",
+    redirectTarget = (
+      await runtimeRpc<ResolvedRedirect>("resolve_published_redirect", {
+        p_slug: slug,
       })
     )[0]
-    if (
-      !link ||
-      !(await isPublishedParent(link)) ||
-      !isSafeRedirectTarget(link.target_url)
-    ) {
+    if (!redirectTarget || !isSafeRedirectTarget(redirectTarget.target_url)) {
       return new Response("Not Found", { status: 404 })
     }
   } catch (error) {
@@ -89,20 +46,23 @@ export default async function redirect(
   }
 
   const session = getSession(request)
-  try {
-    await recordAnalyticsEvent({
+  context.waitUntil(
+    recordAnalyticsEvent({
       sessionId: session.id,
       eventType: "link_click",
-      linkId: link.id,
+      linkId: redirectTarget.link_id,
+    }).catch((error: unknown) => {
+      console.error("Could not record link-hub click", error)
     })
-  } catch (error) {
-    console.error("Could not record link-hub click", error)
-  }
+  )
 
   return withSession(
     new Response(null, {
       status: 302,
-      headers: { location: link.target_url, "cache-control": "no-store" },
+      headers: {
+        location: redirectTarget.target_url,
+        "cache-control": "no-store",
+      },
     }),
     session.setCookie
   )

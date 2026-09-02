@@ -1,5 +1,5 @@
 {
-  "name": "\u0015paladibalint-links",
+  "name": "paladibalint-links",
   "type": "module",
   "version": "0.0.1",
   "private": true,
@@ -12,6 +12,7 @@
     "preview": "astro preview",
     "astro": "astro",
     "lint": "eslint .",
+    "test:go": "vitest run tests/go.test.ts",
     "format": "prettier --write \"**/*.{ts,tsx,astro}\"",
     "typecheck": "astro check"
   },
@@ -45,6 +46,7 @@
     "prettier-plugin-astro": "^0.14.1",
     "prettier-plugin-tailwindcss": "^0.8.0",
     "typescript": "~6",
-    "typescript-eslint": "^8"
+    "typescript-eslint": "^8",
+    "vitest": "^4.1.11"
   }
 }

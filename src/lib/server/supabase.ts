@@ -27,6 +27,25 @@ export async function runtimeSelect<T>(
   return (await response.json()) as T[]
 }
 
+export async function runtimeRpc<T>(
+  functionName: string,
+  args: Record<string, unknown>
+): Promise<T[]> {
+  const { key, url } = getRuntimeConfig()
+  const response = await fetch(`${url}/rest/v1/rpc/${functionName}`, {
+    method: "POST",
+    headers: {
+      apikey: key,
+      Authorization: `Bearer ${key}`,
+      "content-type": "application/json",
+    },
+    body: JSON.stringify(args),
+  })
+  if (!response.ok)
+    throw new Error(`Supabase RPC ${functionName} failed (${response.status}).`)
+  return (await response.json()) as T[]
+}
+
 export async function runtimePost(path: string, body: unknown) {
   const { key, url } = getRuntimeConfig()
   const response = await fetch(`${url}/rest/v1/${path}`, {
