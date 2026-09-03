@@ -7,6 +7,50 @@ import Section from "@/components/link-hub/Section.astro"
 
 const content = await getPageContent()
 const { profile } = content
+const socialProfiles = [
+  ...new Set(
+    content.sections
+      .filter((section) => section.section_type === "social_links")
+      .flatMap((section) => section.links)
+      .map((link) => link.target_url)
+      .filter((url) => /^https?:\/\//.test(url))
+  ),
+]
+const schemaBaseUrl = Astro.site ?? Astro.url
+const profileUrl = Astro.site ? new URL("/", Astro.site).toString() : undefined
+const profileImage = profile.avatar_path
+  ? new URL(profile.avatar_path, schemaBaseUrl).toString()
+  : undefined
+const structuredData = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Person",
+      "@id": profileUrl ? `${profileUrl}#person` : undefined,
+      name: profile.name,
+      jobTitle: profile.position ?? undefined,
+      description: profile.description ?? undefined,
+      url: profileUrl,
+      image: profileImage,
+      sameAs: socialProfiles.length > 0 ? socialProfiles : undefined,
+      knowsAbout: [
+        "full-stack szoftverfejlesztés",
+        "webfejlesztés",
+        "webalkalmazás-fejlesztés",
+      ],
+    },
+    {
+      "@type": "WebSite",
+      name: profile.name,
+      url: profileUrl,
+      inLanguage: "hu-HU",
+      about: {
+        "@type": "Person",
+        name: profile.name,
+      },
+    },
+  ],
+}
 ---
 
 <Layout
@@ -14,6 +58,11 @@ const { profile } = content
   description={profile.meta_description}
   ogImage={profile.og_image_path}
 >
+  <script
+    is:inline
+    type="application/ld+json"
+    set:html={JSON.stringify(structuredData)}
+  />
   <main
     class="mx-auto flex min-h-svh w-full max-w-2xl flex-col px-5 py-12 sm:px-8 sm:py-16"
   >

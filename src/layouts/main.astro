@@ -8,24 +8,36 @@ interface Props {
 }
 
 const { title, description, ogImage } = Astro.props
+const canonicalUrl = Astro.site
+  ? new URL(Astro.url.pathname, Astro.site).toString()
+  : undefined
+const imageUrl = new URL(
+  ogImage ?? "/images/link-hub-og.png",
+  Astro.site ?? Astro.url
+).toString()
 ---
 
-<html lang="en">
+<html lang="hu">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <title>{title}</title>
     {description && <meta name="description" content={description} />}
+    <meta name="author" content="Paládi Bálint" />
+    <meta name="robots" content="index, follow, max-image-preview:large" />
+    {canonicalUrl && <link rel="canonical" href={canonicalUrl} />}
     <meta property="og:title" content={title} />
     {description && <meta property="og:description" content={description} />}
-    <meta
-      property="og:image"
-      content={new URL(
-        ogImage ?? "/images/link-hub-og.png",
-        Astro.url
-      ).toString()}
-    />
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="hu_HU" />
+    <meta property="og:site_name" content="Paládi Bálint" />
+    {canonicalUrl && <meta property="og:url" content={canonicalUrl} />}
+    <meta property="og:image" content={imageUrl} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    {description && <meta name="twitter:description" content={description} />}
+    <meta name="twitter:image" content={imageUrl} />
   </head>
   <body>
     <slot />
